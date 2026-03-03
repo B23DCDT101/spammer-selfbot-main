@@ -50,7 +50,6 @@ class MyBot(commands.Bot):
             try:
                 async with message.channel.typing():
                     pass
-                await message.reply(message.content)
             except Exception as e:
                 # logger.error(f"ERROR khi cố trả lời mention: {e}")
                 print(f"ERROR khi cố trả lời mention: {e}") # In ra console cho dễ debug
