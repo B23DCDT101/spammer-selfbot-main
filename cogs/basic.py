@@ -124,98 +124,97 @@ class Test(commands.Cog):
                 await self.join_vc()
 
     # command: !add 5 10
-    @commands.command(name = 'T1')
-    async def T1(self, ctx: commands.Context[commands.Bot]):
+    @commands.command(name='khoinghia')
+    async def khoinghia(self, ctx: commands.Context):
         """
-        Gửi một bức ảnh cố định đã được định sẵn khi gõ !T1.
+        Khi gõ !khoinghia, bot sẽ nhắc tên người dùng và gửi lời kêu gọi lãnh đạo.
         """
+        # ctx.author.mention sẽ tạo ra chuỗi dạng <@ID_người_dùng>
+        user_mention = ctx.author.mention
         
-        # Đường dẫn cố định đến bức ảnh trên máy chủ của bot
+        # Đường dẫn ảnh (nếu bạn vẫn muốn gửi kèm ảnh)
         file_path = "/home/mq/Desktop/Project/bot/spammer-selfbot-main/image.png"
         
         try:
-            # Tạo một đối tượng discord.File từ đường dẫn và gửi
-            # Lệnh sẽ được gửi ngay tại kênh mà người dùng gõ !T1
-            await ctx.send(file=discord.File(file_path))
+            # Gửi tin nhắn kèm mention
+            # Chúng ta dùng f-string để chèn biến vào chuỗi dễ dàng hơn
+            response_msg = f"sếp {user_mention} hãy lãnh đạo chúng em đi!!!"
             
-            # (Tùy chọn) Nếu bạn muốn bot xóa tin nhắn "!T1" của người dùng
-            # await ctx.message.delete()
+            # Nếu bạn muốn gửi kèm cả bức ảnh image.png:
+            # await ctx.send(response_msg, file=discord.File(file_path))
+            
+            # Nếu chỉ muốn gửi tin nhắn văn bản:
+            await ctx.send(response_msg)
 
         except FileNotFoundError:
-            # Gửi thông báo lỗi nếu bot không tìm thấy file
-            await ctx.send(f"Lỗi: Không tìm thấy file tại đường dẫn: {file_path}. "
-                           "Hãy kiểm tra lại đường dẫn trên máy chủ bot.")
-        except discord.errors.Forbidden:
-            # Gửi thông báo nếu bot không có quyền gửi file
-            await ctx.send("Lỗi: Bot không có quyền 'Attach Files' (Đính kèm tệp) trong kênh này.")
+            await ctx.send(f"Lỗi: Không tìm thấy file ảnh tại {file_path}, nhưng sếp {user_mention} vẫn phải lãnh đạo!")
         except Exception as e:
-            # Gửi thông báo cho các lỗi khác
-            await ctx.send(f"Đã xảy ra lỗi không xác định: {e}")
-    # command: !ping
-    @commands.command(name='ping') # Đặt tên lệnh là 'ping'
-    async def ping(self, ctx: commands.Context[commands.Bot], *, prompt: str):
-        """
-        Gửi một prompt đến API NVIDIA và stream câu trả lời.
-        Cách dùng: !ping [nội dung câu hỏi của bạn]
-        """
-        
-        # Thêm phản ứng '⏳' để báo cho người dùng biết bot đang xử lý
-        try:
-            await ctx.message.add_reaction('⏳')
-        except discord.Forbidden:
-            pass # Bỏ qua nếu bot không có quyền thêm reaction
-
-        try:
-            # 1. Gọi API với prompt từ người dùng
-            completion = client.chat.completions.create(
-                model="qwen/qwen3-coder-480b-a35b-instruct",
-                messages=[{"role": "user", "content": f'answer below 2000 words : {prompt}'}],
-                temperature=0.7,
-                top_p=0.8,
-                max_tokens=16000, # Đây là con số rất lớn, API có thể có giới hạn riêng
-                stream=True
-                # Dòng 'setdb()' không hợp lệ đã bị xóa
-            )
-
-            # 2. Xử lý stream và gửi tin nhắn
-            response_text = ""
-            for chunk in completion:
-                # Kiểm tra xem có nội dung trong chunk không
-                if chunk.choices[0].delta.content:
-                    new_content = chunk.choices[0].delta.content
-                    
-                    # Kiểm tra xem việc thêm nội dung mới có vượt quá 2000 ký tự không
-                    if len(response_text) + len(new_content) >= 2000:
-                        # Nếu vượt quá, gửi tin nhắn hiện tại trước
-                        if response_text: # Đảm bảo không gửi chuỗi rỗng
-                            await ctx.send(response_text)
-                        # Bắt đầu tin nhắn mới với nội dung chunk
-                        response_text = new_content
-                    else:
-                        # Nếu không, tiếp tục cộng dồn
-                        response_text += new_content
-
-            # 3. Gửi phần tin nhắn cuối cùng còn lại
-            if response_text:
-                await ctx.send(response_text)
-
-            # Xóa reaction '⏳' sau khi hoàn tất
-            try:
-                await ctx.message.remove_reaction('⏳', self.bot.user) # type: ignore
-            except discord.Forbidden:
-                pass
-
-        except Exception as e:
-            # Xử lý lỗi nếu có
-            logger.error(f"Lỗi khi gọi API NVIDIA: {e}") # Giả sử bạn có logger
-            print(f"Lỗi khi gọi API NVIDIA: {e}") # In ra console
             await ctx.send(f"Đã xảy ra lỗi: {e}")
-            # Thêm reaction '❌' nếu thất bại
-            try:
-                await ctx.message.remove_reaction('⏳', self.bot.user) # type: ignore
-                await ctx.message.add_reaction('❌')
-            except discord.Forbidden:
-                pass
+    # command: !ping
+    # @commands.command(name='ping') # Đặt tên lệnh là 'ping'
+    # async def ping(self, ctx: commands.Context[commands.Bot], *, prompt: str):
+    #     """
+    #     Gửi một prompt đến API NVIDIA và stream câu trả lời.
+    #     Cách dùng: !ping [nội dung câu hỏi của bạn]
+    #     """
+        
+    #     # Thêm phản ứng '⏳' để báo cho người dùng biết bot đang xử lý
+    #     try:
+    #         await ctx.message.add_reaction('⏳')
+    #     except discord.Forbidden:
+    #         pass # Bỏ qua nếu bot không có quyền thêm reaction
+
+    #     try:
+    #         # 1. Gọi API với prompt từ người dùng
+    #         completion = client.chat.completions.create(
+    #             model="qwen/qwen3-coder-480b-a35b-instruct",
+    #             messages=[{"role": "user", "content": f'answer below 2000 words : {prompt}'}],
+    #             temperature=0.7,
+    #             top_p=0.8,
+    #             max_tokens=16000, # Đây là con số rất lớn, API có thể có giới hạn riêng
+    #             stream=True
+    #             # Dòng 'setdb()' không hợp lệ đã bị xóa
+    #         )
+
+    #         # 2. Xử lý stream và gửi tin nhắn
+    #         response_text = ""
+    #         for chunk in completion:
+    #             # Kiểm tra xem có nội dung trong chunk không
+    #             if chunk.choices[0].delta.content:
+    #                 new_content = chunk.choices[0].delta.content
+                    
+    #                 # Kiểm tra xem việc thêm nội dung mới có vượt quá 2000 ký tự không
+    #                 if len(response_text) + len(new_content) >= 2000:
+    #                     # Nếu vượt quá, gửi tin nhắn hiện tại trước
+    #                     if response_text: # Đảm bảo không gửi chuỗi rỗng
+    #                         await ctx.send(response_text)
+    #                     # Bắt đầu tin nhắn mới với nội dung chunk
+    #                     response_text = new_content
+    #                 else:
+    #                     # Nếu không, tiếp tục cộng dồn
+    #                     response_text += new_content
+
+    #         # 3. Gửi phần tin nhắn cuối cùng còn lại
+    #         if response_text:
+    #             await ctx.send(response_text)
+
+    #         # Xóa reaction '⏳' sau khi hoàn tất
+    #         try:
+    #             await ctx.message.remove_reaction('⏳', self.bot.user) # type: ignore
+    #         except discord.Forbidden:
+    #             pass
+
+    #     except Exception as e:
+    #         # Xử lý lỗi nếu có
+    #         logger.error(f"Lỗi khi gọi API NVIDIA: {e}") # Giả sử bạn có logger
+    #         print(f"Lỗi khi gọi API NVIDIA: {e}") # In ra console
+    #         await ctx.send(f"Đã xảy ra lỗi: {e}")
+    #         # Thêm reaction '❌' nếu thất bại
+    #         try:
+    #             await ctx.message.remove_reaction('⏳', self.bot.user) # type: ignore
+    #             await ctx.message.add_reaction('❌')
+    #         except discord.Forbidden:
+    #             pass
 
 async def setup(bot: MyBot):
     await bot.add_cog(Test(bot))
