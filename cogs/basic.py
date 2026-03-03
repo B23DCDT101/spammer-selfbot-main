@@ -138,7 +138,7 @@ class Test(commands.Cog):
         try:
             # Gửi tin nhắn kèm mention
             # Chúng ta dùng f-string để chèn biến vào chuỗi dễ dàng hơn
-            response_msg = f"sếp {user_mention} hãy lãnh đạo chúng em đi!!!"
+            response_msg = f"sếp {user_mention} hãy lãnh đạo chúng em đi!!!\nhttps://tenor.com/view/skeleton-banging-shield-rahhh-thiccatina-gif-2077174781171827192"
             
             # Nếu bạn muốn gửi kèm cả bức ảnh image.png:
             # await ctx.send(response_msg, file=discord.File(file_path))
