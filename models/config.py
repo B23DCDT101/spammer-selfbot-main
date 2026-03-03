@@ -14,6 +14,7 @@ class Config(TypedDict):
     ERROR_MESSAGE: str
     VOICE_CHANNEL_ID: int
     BACKUP_VOICE_CHANNEL_ID: int
+    NOTIFY_CHANNEL_ID: int
 
 config: Config = {
     'DISCORD_TOKEN': os.getenv('DISCORD_TOKEN', ''),
@@ -25,4 +26,5 @@ config: Config = {
     'ERROR_MESSAGE': os.getenv('ERROR_MESSAGE', "t đang mệt lắm đừng nói chuyện với t nữa"),
     'VOICE_CHANNEL_ID': int(os.getenv('VOICE_CHANNEL_ID', 0)),
     'BACKUP_VOICE_CHANNEL_ID': int(os.getenv('BACKUP_VOICE_CHANNEL_ID', 0)),
+    'NOTIFY_CHANNEL_ID': int(os.getenv('NOTIFY_CHANNEL_ID', 0)),
 }
