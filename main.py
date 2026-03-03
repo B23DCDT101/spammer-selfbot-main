@@ -47,13 +47,7 @@ class MyBot(commands.Bot):
         
         # Phần code trả lời "hello" khi được mention của bạn
         if self.user in message.mentions:
-            try:
-                async with message.channel.typing():
-                    pass
-                await message.reply(message.content)
-            except Exception as e:
-                # logger.error(f"ERROR khi cố trả lời mention: {e}")
-                print(f"ERROR khi cố trả lời mention: {e}") # In ra console cho dễ debug
+            pass
 
 
 # run the bot
