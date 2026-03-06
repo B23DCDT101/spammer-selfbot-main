@@ -1,4 +1,8 @@
 aiohappyeyeballs==2.6.1
+fastapi==0.115.12
+uvicorn==0.34.0
+motor==3.7.0
+pymongo==4.12.1
 aiohttp==3.13.1
 aiosignal==1.4.0
 annotated-types==0.7.0
@@ -11,6 +15,7 @@ charset-normalizer==3.4.4
 colorama==0.4.6
 discord-protos==0.0.2
 discord.py-self==2.0.1
+discord-interactions==0.4.0
 distro==1.9.0
 frozenlist==1.8.0
 google-auth==2.41.1

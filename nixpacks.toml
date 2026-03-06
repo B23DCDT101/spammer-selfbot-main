@@ -1,0 +1,8 @@
+[phases.build]
+cmds = ["pip install -r requirements.txt"]
+
+[phases.start]
+cmds = ["bash start.sh"]
+
+[variables]
+PYTHON_VERSION = "3.12"
