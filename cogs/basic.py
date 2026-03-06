@@ -10,6 +10,7 @@ import os
 import datetime
 from dataclasses import dataclass, field
 from typing import Optional
+import aiohttp
 
 logger = logging.getLogger(__name__)
 
@@ -470,6 +471,38 @@ class Test(commands.Cog):
             "`!tododelete <id>` — Xóa todo\n\n"
             "💡 ID lấy 8 ký tự đầu từ `!todolist`"
         )
+    
+    @commands.command(name='bitcoin')
+    async def bitcoin(self, ctx: commands.Context):
+        BLOCKCHAIR_API_KEY = os.getenv('BLOCKCHAIR_API_KEY')
+        if not BLOCKCHAIR_API_KEY:
+            return await ctx.send("⚠️ Lỗi: Chưa cấu hình BLOCKCHAIR_API_KEY trong file .env")
+
+        url = f"https://api.blockchair.com/bitcoin/stats?key={BLOCKCHAIR_API_KEY}"
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as response:
+                    if response.status == 200:
+                        res_data = await response.json()
+                        data = res_data['data']
+                        price = data['market_price_usd']
+                        change_24h = data.get('market_price_usd_change_24h_percentage', 0)
+                        blocks = data.get('blocks', 'N/A')
+                        txs_24h = data.get('transactions_24h', 'N/A')
+                        arrow = "📈" if change_24h >= 0 else "📉"
+                        await ctx.send(
+                            f"₿ **Bitcoin (BTC)**\n"
+                            f"💰 Giá: **${price:,.2f} USD**\n"
+                            f"{arrow} 24h: **{change_24h:+.2f}%**\n"
+                            f"🧱 Blocks: {blocks:,}\n"
+                            f"📤 Giao dịch 24h: {txs_24h:,}"
+                        )
+                    elif response.status == 402:
+                        await ctx.send("❌ API Key không hợp lệ hoặc đã hết quota.")
+                    else:
+                        await ctx.send(f"❌ Không thể kết nối Blockchair (HTTP {response.status}).")
+        except Exception as e:
+            await ctx.send(f"❌ Lỗi: {e}")
 
 
 async def setup(bot: MyBot):
